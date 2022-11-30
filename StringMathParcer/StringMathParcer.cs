@@ -4,42 +4,78 @@ using System.Text.RegularExpressions;
 
 public class StringMathParcer
 {
-    public string MathString;
+    public string MathString { get { return mathString; } set => mathString = value; }
+
+    private string mathString;
 
     public StringMathParcer(string intputString)
     {
-        MathString = intputString;
+        mathString = intputString;
     }
 
-    public int Result()
+    public double Result()
     {
-        var mathOperation = Regex.Matches(MathString, @"\d+(\+\-)").FirstOrDefault().ToString();
-        do
+        var mathOperation = GetMathOperation();
+        ParceCurrentOperation(mathOperation); 
+        mathOperation = GetMathOperation();
+        if (!string.IsNullOrEmpty(mathOperation))
+            Result();
+        return Double.Parse(MathString);
+    }
+
+    private void ParceCurrentOperation(string mathOperation)
+    {
+        var operationSymbol = Regex.Match(mathOperation, @"(\/|\*|\+|\-)").ToString();
+        switch (operationSymbol)
         {
-            var operationSymbol = Regex.Match(mathOperation, @"(\+|\-)").ToString();
-            switch (operationSymbol)
-            {
-                case "-":
-                    MathString = MathString.Replace(mathOperation, Minus(mathOperation));
-                    break;
-                case "+":
-                    MathString = MathString.Replace(mathOperation, Plus(mathOperation));
-                    break;
-            }
-            mathOperation = Regex.Matches(MathString, @"\d+(\+\-)").FirstOrDefault().ToString();
-        } while (!string.IsNullOrEmpty(mathOperation));
+            case "-":
+                MathString = MathString.Replace(mathOperation, Difference(mathOperation));
+                break;
+            case "+":
+                MathString = MathString.Replace(mathOperation, Sum(mathOperation));
+                break;
+            case "/":
+                MathString = MathString.Replace(mathOperation, Division(mathOperation));
+                break;
+            case "*":
+                MathString = MathString.Replace(mathOperation, Multiplication(mathOperation));
+                break;
 
-        return 1;
+        }
     }
 
-    private string Minus(string mathOperation)
+    private string Division(string mathOperation)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Int32.Parse(x.ToString())).Aggregate((x, y) => x - y).ToString();
+        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x / y).ToString();
     }
 
-    private string Plus(string mathOperation)
+    private string Multiplication(string mathOperation)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Int32.Parse(x.ToString())).Aggregate((x, y) => x + y).ToString();
+        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x * y).ToString();
+    }
+
+    private string Difference(string mathOperation)
+    {
+        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x - y).ToString();
+    }
+
+    private string Sum(string mathOperation)
+    {
+        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x + y).ToString();
+    }
+
+    private string GetMathOperation()
+    {
+        string mathOperation;
+        try
+        {
+            mathOperation = Regex.Matches(MathString, @"\d+(\*|\/|\+|\-)\d+").FirstOrDefault().ToString();
+        }
+        catch (Exception ex)
+        {
+            mathOperation = string.Empty;
+        }
+        return mathOperation;
     }
 
 }
