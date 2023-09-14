@@ -10,7 +10,7 @@ public class StringMathParcer
 
     public StringMathParcer(string intputString)
     {
-        mathString = intputString;
+        mathString = intputString.Replace(".", ",");
     }
 
     public double Result()
@@ -26,6 +26,7 @@ public class StringMathParcer
     private void ParceCurrentOperation(string mathOperation)
     {
         var operationSymbol = Regex.Match(mathOperation, @"(\/|\*|\+|\-)").ToString();
+        var numbers = Regex.Matches(mathOperation, @"\d+(,\d+)?");
         switch (operationSymbol)
         {
             case "-":
@@ -44,24 +45,24 @@ public class StringMathParcer
         }
     }
 
-    private string Division(string mathOperation)
+    private string Division(MatchCollection numbers)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x / y).ToString();
+        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x / y).ToString();
     }
 
-    private string Multiplication(string mathOperation)
+    private string Multiplication(MatchCollection numbers)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x * y).ToString();
+        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x * y).ToString();
     }
 
-    private string Difference(string mathOperation)
+    private string Difference(MatchCollection numbers)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x - y).ToString();
+        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x - y).ToString();
     }
 
-    private string Sum(string mathOperation)
+    private string Sum(MatchCollection numbers)
     {
-        return Regex.Matches(mathOperation, @"\d+").Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x + y).ToString();
+        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x + y).ToString();
     }
 
     private string GetMathOperation()
@@ -69,7 +70,7 @@ public class StringMathParcer
         string mathOperation;
         try
         {
-            mathOperation = Regex.Matches(MathString, @"\d+(\*|\/|\+|\-)\d+").FirstOrDefault().ToString();
+            mathOperation = Regex.Match(MathString, @"\d+(,\d+)?(\*|\/|\+|\-)\d+(,\d+)?", RegexOptions.IgnoreCase).ToString();
         }
         catch (Exception ex)
         {

@@ -1,0 +1,12 @@
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\bin\Debug\net6.0\StringMathParcer.deps.json
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\bin\Debug\net6.0\StringMathParcer.dll
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\bin\Debug\net6.0\StringMathParcer.pdb
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.csproj.AssemblyReference.cache
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.AssemblyInfoInputs.cache
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.AssemblyInfo.cs
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.csproj.CoreCompileInputs.cache
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.dll
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\refint\StringMathParcer.dll
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\StringMathParcer.pdb
+C:\Users\5\Source\Repos\Alim-Lyukmanov\MathStringParcer\StringMathParcer\obj\Debug\net6.0\ref\StringMathParcer.dll
