@@ -2,81 +2,78 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
+
+
 public class StringMathParcer
 {
-    public string MathString { get { return mathString; } set => mathString = value; }
+    private List<object> mathList;
 
-    private string mathString;
+    private string[] operations = {"+","-","*","/"};
 
     public StringMathParcer(string intputString)
     {
-        mathString = intputString.Replace(".", ",");
+        intputString = intputString.Replace(".", ",");
+        mathList = ConvertStringToList(intputString);
     }
 
-    public double Result()
-    {
-        var mathOperation = GetMathOperation();
-        ParceCurrentOperation(mathOperation); 
-        mathOperation = GetMathOperation();
-        if (!string.IsNullOrEmpty(mathOperation))
-            Result();
-        return Double.Parse(MathString);
-    }
+    
 
-    private void ParceCurrentOperation(string mathOperation)
+    public object Result()
     {
-        var operationSymbol = Regex.Match(mathOperation, @"(\/|\*|\+|\-)").ToString();
-        var numbers = Regex.Matches(mathOperation, @"\d+(,\d+)?");
-        switch (operationSymbol)
-        {
-            case "-":
-                MathString = MathString.Replace(mathOperation, Difference(mathOperation));
-                break;
-            case "+":
-                MathString = MathString.Replace(mathOperation, Sum(mathOperation));
-                break;
-            case "/":
-                MathString = MathString.Replace(mathOperation, Division(mathOperation));
-                break;
-            case "*":
-                MathString = MathString.Replace(mathOperation, Multiplication(mathOperation));
-                break;
-
-        }
-    }
-
-    private string Division(MatchCollection numbers)
-    {
-        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x / y).ToString();
-    }
-
-    private string Multiplication(MatchCollection numbers)
-    {
-        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x * y).ToString();
-    }
-
-    private string Difference(MatchCollection numbers)
-    {
-        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x - y).ToString();
-    }
-
-    private string Sum(MatchCollection numbers)
-    {
-        return numbers.Select(x => Double.Parse(x.ToString())).Aggregate((x, y) => x + y).ToString();
-    }
-
-    private string GetMathOperation()
-    {
-        string mathOperation;
+        object res;
         try
         {
-            mathOperation = Regex.Match(MathString, @"\d+(,\d+)?(\*|\/|\+|\-)\d+(,\d+)?", RegexOptions.IgnoreCase).ToString();
+            res = ProcessOperations();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            mathOperation = string.Empty;
+            res = "Incorrect input";
         }
-        return mathOperation;
+        return res;
+    }
+
+    private object ProcessOperations()
+    {
+        MathOperation mOp;
+        object res = 0;
+        while (mathList.Intersect(operations).Any())
+        {
+            var index = mathList.Where(x => operations.Contains(x)).Select(x => mathList.IndexOf(x)).FirstOrDefault();
+            if (index == 0)
+            {
+                res = mathList[index].ToString() + mathList[index + 1].ToString();
+                mathList.RemoveRange(index, 2);
+                mathList.Insert(index, res);
+            }
+            else
+            {
+                mOp = new MathOperation(mathList[index - 1], mathList[index], mathList[index + 1]);
+                mathList.RemoveRange(index - 1, 3);
+                res = mOp.Result();
+                mathList.Insert(index - 1, mOp.Result());
+            }
+        }
+        return res;
+    }
+
+    private List<object> ConvertStringToList(string intputString)
+    {
+        var list = new List<object>();
+        for (int i = 0; i < intputString.Length;i++)
+        {
+            var sString = intputString[i].ToString();
+            int counter = 1;
+            while (i+counter < intputString.Length)
+            {
+                if (Regex.Matches(intputString[i + counter].ToString(), @"(\-|\+|\*|\/)").Count()>0|| Regex.Matches(intputString[i].ToString(), @"(\-|\+|\*|\/)").Count()>0)
+                    break;
+                sString += intputString[i+counter].ToString();
+                counter++;
+            }
+            list.Add(sString);
+            i += counter-1;
+        }
+        return list;
     }
 
 }

@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\StringMathParcer"
   ],
+  "SelectedNode": "\\StringMathParcer\\StringMathParcer.cs",
   "PreviewInSolutionExplorer": false
 }

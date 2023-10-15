@@ -16,7 +16,35 @@ public class MathOperation
 	{
 		first = double.Parse(Regex.Matches(strMathOperation, @"\d+")[0].ToString());
         second = double.Parse(Regex.Matches(strMathOperation, @"\d+")[1].ToString());
-        operationSymbol = Regex.Match(strMathOperation, @"(\/|\*|\+|\-)").ToString()
+        operation = Regex.Match(strMathOperation, @"(\/|\*|\+|\-)").ToString();
+    }
+
+    public MathOperation(object first, object operation, object second)
+    {
+        this.first = double.Parse(first.ToString());
+        this.second = double.Parse(second.ToString());
+        this.operation = operation.ToString();
+    }
+
+    public double Result()
+    {
+        double result = 0;
+        switch (operation)
+        {
+            case "-":
+                result = Difference();
+                break;
+            case "+":
+                result = Sum();
+                break;
+            case "/":
+                result = Division();
+                break;
+            case "*":
+                result = Multiplication();
+                break;
+        }
+        return result;
     }
 
     private double Division()
@@ -24,21 +52,22 @@ public class MathOperation
         return first/second;
     }
 
-    private int Multiplication()
+    private double Multiplication()
     {
         return first * second;
     }
 
-    private int Difference()
+    private double Difference()
     {
         return first-second;
     }
 
-    private int Sum()
+    private double Sum()
     {
         return first+second;
     }
 
-
+    ~MathOperation()
+    { }
 
 }
