@@ -8,7 +8,16 @@ public class StringMathParcer
 {
     private List<object> mathList;
 
-    private string[] operations = {"+","-","*","/"};
+    private Dictionary<string, List<string>> operations = new Dictionary<string, List<string>> 
+    { 
+        { 
+            "first", new List<string> { "*", "/" } 
+        },
+        {
+            "second", new List<string>{"+", "-"}
+        }
+    };
+
 
     public StringMathParcer(string intputString)
     {
@@ -16,18 +25,18 @@ public class StringMathParcer
         mathList = ConvertStringToList(intputString);
     }
 
-    
-
     public object Result()
     {
         object res;
         try
         {
+            if (mathList.Count == 0)
+                throw new Exception("Empty input");
             res = ProcessOperations();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            res = "Incorrect input";
+            res = ex.Message;
         }
         return res;
     }
@@ -36,9 +45,12 @@ public class StringMathParcer
     {
         MathOperation mOp;
         object res = 0;
-        while (mathList.Intersect(operations).Any())
+        var searchingOperations = operations["first"];
+        while (mathList.Intersect(operations.SelectMany(x=>x.Value)).Any())
         {
-            var index = mathList.Where(x => operations.Contains(x)).Select(x => mathList.IndexOf(x)).FirstOrDefault();
+            if (!mathList.Intersect(operations["first"]).Any())
+                searchingOperations = operations["second"];
+            var index = mathList.Where(x => searchingOperations.Contains(x)).Select(x => mathList.IndexOf(x)).FirstOrDefault();
             if (index == 0)
             {
                 res = mathList[index].ToString() + mathList[index + 1].ToString();
@@ -65,7 +77,7 @@ public class StringMathParcer
             int counter = 1;
             while (i+counter < intputString.Length)
             {
-                if (Regex.Matches(intputString[i + counter].ToString(), @"(\-|\+|\*|\/)").Count()>0|| Regex.Matches(intputString[i].ToString(), @"(\-|\+|\*|\/)").Count()>0)
+                if (Regex.Matches(intputString[i + counter].ToString(), @"(\-|\+|\*|\/|\(|\))").Count()>0|| Regex.Matches(intputString[i].ToString(), @"(\-|\+|\*|\/|\(|\))").Count()>0)
                     break;
                 sString += intputString[i+counter].ToString();
                 counter++;
