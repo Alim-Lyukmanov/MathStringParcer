@@ -21,6 +21,8 @@ public class MathOperation
 
     public MathOperation(object first, object operation, object second)
     {
+        if (first == null || second == null || operation == null) 
+            throw new ArgumentNullException(nameof(first));
         this.first = double.Parse(first.ToString());
         this.second = double.Parse(second.ToString());
         this.operation = operation.ToString();
@@ -49,6 +51,8 @@ public class MathOperation
 
     private double Division()
     {
+        if (second == 0)
+            throw new Exception("Can not divide by 0!!!");
         return first/second;
     }
 
