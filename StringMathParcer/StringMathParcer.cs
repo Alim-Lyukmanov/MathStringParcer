@@ -8,6 +8,8 @@ public class StringMathParcer
 {
     private List<object> mathList;
 
+    private string originalInput;
+
     private Dictionary<string, List<string>> operations = new Dictionary<string, List<string>> 
     { 
         { 
@@ -19,10 +21,10 @@ public class StringMathParcer
     };
 
 
-    public StringMathParcer(string intputString)
+    public StringMathParcer(string inputString)
     {
-        intputString = intputString.Replace(".", ",");
-        mathList = ConvertStringToList(intputString);
+        originalInput = inputString.Replace(".", ",");
+        mathList = ConvertStringToList(originalInput);
     }
 
     public object Result()
@@ -30,6 +32,8 @@ public class StringMathParcer
         object res;
         try
         {
+            if (!BraketsChecker())
+                throw new Exception("Incorrect brakets");
             if (mathList.Count == 0)
                 throw new Exception("Empty input");
             res = ProcessOperations();
@@ -86,6 +90,28 @@ public class StringMathParcer
             i += counter-1;
         }
         return list;
+    }
+
+    private bool BraketsChecker()
+    {
+        var stack = new Stack<string>();
+        var brackets = Regex.Matches(originalInput, @"(\(|\))").Select(x => x.ToString());
+        if (brackets.Count() == 0)
+            return true;
+        foreach (var m in brackets)
+        {
+            if (stack.Count == 0||m=="(")
+            {
+                stack.Push(m);
+                continue;
+            }
+            var last = stack.Peek();
+            if (last == "(" && m == ")")
+            {
+                stack.Pop();
+            }
+        }
+        return stack.Count == 0;
     }
 
 }
